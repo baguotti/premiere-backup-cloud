@@ -1,0 +1,8 @@
+{
+  "sync_jobs": [
+    {
+      "source": "/Users/username/Desktop/ProjectFolder/00_OFFLINE",
+      "destination": "/Users/username/Library/CloudStorage/GoogleDrive-email@gmail.com/My Drive/Premiere Backups/ProjectFolder"
+    }
+  ]
+}
