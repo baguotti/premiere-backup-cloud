@@ -164,6 +164,8 @@ class BackupUI(ctk.CTk):
         subprocess.run(["launchctl", "load", "-w", PLIST_PATH])
 
 if __name__ == "__main__":
+    app = BackupUI()
+
     if sys.platform == "darwin":
         try:
             from AppKit import NSApplication, NSImage
@@ -177,6 +179,5 @@ if __name__ == "__main__":
         except Exception:
             pass
 
-    app = BackupUI()
     os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "Python" to true' ''')
     app.mainloop()
