@@ -3,10 +3,21 @@ import json
 import time
 import shutil
 from pathlib import Path
+import subprocess
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 CONFIG_FILE = os.path.expanduser("~/.premiere_backup.json")
+
+def ensure_gdrive_running():
+    try:
+        result = subprocess.run(["pgrep", "-f", "Google Drive"], capture_output=True, text=True)
+        if not result.stdout.strip():
+            log("Google Drive is not running. Starting it in the background...")
+            subprocess.run(["open", "-g", "-a", "Google Drive"])
+            time.sleep(3) # Wait for it to mount
+    except Exception as e:
+        log(f"Error checking/starting Google Drive: {e}")
 
 def log(message):
     print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {message}", flush=True)
@@ -66,6 +77,7 @@ class PRProjHandler(FileSystemEventHandler):
         
         # If the file currently exists locally, it's a copy operation
         if src_path.exists():
+            ensure_gdrive_running()
             dest_path.parent.mkdir(parents=True, exist_ok=True)
             
             # Check if we need to copy
@@ -104,6 +116,8 @@ def initial_sync(source_base, destination_base):
     
     if not source_path.exists():
         return
+        
+    ensure_gdrive_running()
         
     copied_count = 0
     for root, _, files in os.walk(source_path):
