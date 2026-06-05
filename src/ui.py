@@ -164,6 +164,19 @@ class BackupUI(ctk.CTk):
         subprocess.run(["launchctl", "load", "-w", PLIST_PATH])
 
 if __name__ == "__main__":
+    if sys.platform == "darwin":
+        try:
+            from AppKit import NSApplication, NSImage
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            icon_path = os.path.abspath(os.path.join(script_dir, "..", "icon", "Icon_256x256.png"))
+            if os.path.exists(icon_path):
+                ns_app = NSApplication.sharedApplication()
+                icon_image = NSImage.alloc().initWithContentsOfFile_(icon_path)
+                if icon_image:
+                    ns_app.setApplicationIconImage_(icon_image)
+        except Exception:
+            pass
+
     app = BackupUI()
     os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "Python" to true' ''')
     app.mainloop()
