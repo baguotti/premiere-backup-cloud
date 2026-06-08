@@ -118,6 +118,11 @@ def initial_sync(source_base, destination_base):
         return
         
     ensure_gdrive_running()
+    
+    try:
+        destination_path.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        log(f"Error creating destination folder {destination_path}: {e}")
         
     copied_count = 0
     for root, _, files in os.walk(source_path):

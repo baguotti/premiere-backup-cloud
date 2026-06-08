@@ -20,6 +20,14 @@ def save_config(config):
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f, indent=2)
 
+def get_destination_folder_name(folder_path):
+    path = os.path.normpath(folder_path)
+    parts = path.split(os.sep)
+    for i in range(len(parts) - 1, -1, -1):
+        if parts[i].upper() == "01_PROJECTS" and i > 0:
+            return parts[i-1]
+    return os.path.basename(path)
+
 def main():
     if len(sys.argv) < 2:
         return
@@ -35,7 +43,7 @@ def main():
         if job["source"] == folder_path:
             return
             
-    folder_name = os.path.basename(folder_path.rstrip('/'))
+    folder_name = get_destination_folder_name(folder_path)
     dest_path = os.path.join(DEFAULT_DEST_BASE, folder_name)
     
     new_job = {

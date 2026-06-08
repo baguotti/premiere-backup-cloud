@@ -100,6 +100,14 @@ class BackupUI(ctk.CTk):
                                        font=ctk.CTkFont(size=12, weight="bold"))
             btn_remove.grid(row=0, column=1, padx=15, pady=15)
 
+    def get_destination_folder_name(self, folder_path):
+        path = os.path.normpath(folder_path)
+        parts = path.split(os.sep)
+        for i in range(len(parts) - 1, -1, -1):
+            if parts[i].upper() == "01_PROJECTS" and i > 0:
+                return parts[i-1]
+        return os.path.basename(path)
+
     def add_folder(self):
         folder_path = filedialog.askdirectory(title="Select Premiere Project Folder")
         if not folder_path:
@@ -111,7 +119,7 @@ class BackupUI(ctk.CTk):
                 messagebox.showinfo("Info", "This folder is already being watched.")
                 return
                 
-        folder_name = os.path.basename(folder_path.rstrip('/'))
+        folder_name = self.get_destination_folder_name(folder_path)
         dest_path = os.path.join(DEFAULT_DEST_BASE, folder_name)
         
         new_job = {
